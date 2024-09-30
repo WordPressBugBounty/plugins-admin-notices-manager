@@ -86,6 +86,21 @@ Visit the [Melapress website](https://melapress.com/) for more information about
 1. Unzip the zip file and upload the `admin-notices-manager` folder to the `/wp-content/plugins/` directory
 1. Activate the Admin Notices Manager plugin through the 'Plugins' menu in WordPress
 
+== Frequently Asked Questions ==
+
+= Does the plugin send any data to Melapress? =
+No, the plugin does not send any data to us whatsoever. The only data we recieve is license data from the premium edition of the plugin.
+
+= Does the plugin receive updates? =
+We update the plugin fairly regularly to ensure the plugin continues to run in tip-top shape while adding new features from time to time.
+
+= Support and Documentation =
+Please refer to our [support pages](https://melapress.com/support/?utm_source=wp+repo&utm_medium=repo+link&utm_campaign=wordpress_org&utm_content=anm) for all the technical and product documentation.
+
+= How can I report security bugs? =
+You can report security bugs through the Patchstack Vulnerability Disclosure Program. Please use this [form](https://patchstack.com/database/vdp/admin-notices-manager). For more details please refer to our [Melapress plugins security program](https://melapress.com/plugins-security-program/).
+
+
 == Screenshots ==
 
 1. The plugin is very easy to use. Once installed it will automatically capture all notifications.
