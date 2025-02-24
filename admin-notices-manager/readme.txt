@@ -5,8 +5,8 @@ License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl.html
 Tags: admin notices, hide admin notices, manage admin notices, notices, dashboard notices
 Requires at least: 5.0
-Tested up to: 6.7.0
-Stable tag: 1.5.0
+Tested up to: 6.7.2
+Stable tag: 1.6.0
 Requires PHP: 7.2.0
 
 Better manage admin notices & never miss important developer messages!
@@ -86,21 +86,6 @@ Visit the [Melapress website](https://melapress.com/) for more information about
 1. Unzip the zip file and upload the `admin-notices-manager` folder to the `/wp-content/plugins/` directory
 1. Activate the Admin Notices Manager plugin through the 'Plugins' menu in WordPress
 
-== Frequently Asked Questions ==
-
-= Does the plugin send any data to Melapress? =
-No, the plugin does not send any data to us whatsoever. The only data we recieve is license data from the premium edition of the plugin.
-
-= Does the plugin receive updates? =
-We update the plugin fairly regularly to ensure the plugin continues to run in tip-top shape while adding new features from time to time.
-
-= Support and Documentation =
-Please refer to our [support pages](https://melapress.com/support/?utm_source=wp+repo&utm_medium=repo+link&utm_campaign=wordpress_org&utm_content=anm) for all the technical and product documentation.
-
-= How can I report security bugs? =
-You can report security bugs through the Patchstack Vulnerability Disclosure Program. Please use this [form](https://patchstack.com/database/vdp/admin-notices-manager). For more details please refer to our [Melapress plugins security program](https://melapress.com/plugins-security-program/).
-
-
 == Screenshots ==
 
 1. The plugin is very easy to use. Once installed it will automatically capture all notifications.
@@ -110,6 +95,25 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 5. Optionally, admin notices can also be shown in a pop-up window, from where you can mark them as read or permanently hide them.
 
 == Changelog ==
+
+= 1.6.0 (2025-02-24) =
+
+* **New Functionality**
+	* Added an option to allow specific notifications to appear in the dashboard as usual.
+
+* **Enhancements & improvements**
+	* Improved plugin handling of translations, ensuring proper translation of strings within JavaScript code.
+	* Enhanced the way notifications are hidden, significantly reducing the "visual flash" effect when a notification disappears.
+
+* **Bug Fixes**
+	* Fixed an issue where site notifications were not properly hidden on Simply History plugin pages.
+	* Resolved a conflict with the Admin Site Enhancements plugin that caused its main page to appear blank when Admin Notice Manager was active.
+	* Fixed a compatibility issue with Gravity Forms, where some Gravity Forms plugin pages appeared blank when our plugin was active.
+	* Addressed a visual issue where our plugin incorrectly hid the H5P plugin’s consent notice.
+	* Fixed a problem where some notices were missing the "Hide Forever" button.
+	* Resolved a bug causing the "Reset list of hidden notices" function to malfunction.
+	* Fixed a bug in which "Success level notices" were not being excluded from being hidden according to the plugin settings.
+	* Improved the way we count the hidden notifications. Plugin will now report correct number each time.
 
 = 1.5.0 (2024-06-05) =
 
@@ -122,9 +126,6 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **Bug fixes**
 	* Fixed: WordPress system notifcations were captured as third party notifications, thus hidden even when they should have not been.
 	* Security fix for missing authorization which would allow authenticated subscribers to retrieve list of user email addresses.
-
-
-
 
 = 1.4.0 (2023-02-15) =
 
