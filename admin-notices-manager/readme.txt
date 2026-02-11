@@ -5,7 +5,7 @@ License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl.html
 Tags: admin notices, hide admin notices, manage admin notices, notices, dashboard notices
 Requires at least: 5.0
-Tested up to: 6.7.2
+Tested up to: 6.9
 Stable tag: 1.6.0
 Requires PHP: 7.2.0
 
@@ -60,7 +60,7 @@ Support for Admin Notices Manager is available for free via:
 Melapress builds high-quality niche WordPress security & management plugins. It's suite of plugins consists of:
 
 * [WP 2FA](https://melapress.com/wordpress-2fa/)
-* [CAPTCHA 4WP](https://melapress.com/wordpress-captcha/)
+* [Melapress Role Editor](https://melapress.com/wordpress-user-roles-editor/)
 * [Melapress Login Security](https://melapress.com/wordpress-login-security/)
 * [WP Activity Log](https://melapress.com/wordpress-activity-log/)
 
