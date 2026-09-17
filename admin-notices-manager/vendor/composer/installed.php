@@ -3,7 +3,7 @@
         'name' => 'wpwhitesecurity/admin-notices-manager',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '29a1d33ce04082853d0cf9395312cef1cc9e116c',
+        'reference' => '76791195815297f11f7bb6c8fd38ce8d0bbedb74',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'wpwhitesecurity/admin-notices-manager' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '29a1d33ce04082853d0cf9395312cef1cc9e116c',
+            'reference' => '76791195815297f11f7bb6c8fd38ce8d0bbedb74',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

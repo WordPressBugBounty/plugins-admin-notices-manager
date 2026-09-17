@@ -89,9 +89,9 @@ if ( ! class_exists( '\AdminNoticesManager\Select2_WPWS' ) ) {
 		 */
 		public static function handle_ajax_call() {
 
-			// Verify nonce.
-			if ( ! isset( $_REQUEST['nonce'] ) || false === wp_verify_nonce( \sanitize_text_field( \wp_unslash( $_REQUEST['nonce'] ) ), 'wsal-select2-check' ) ) {
-				wp_send_json_error( esc_html__( 'Insecure request.', 'wp-security-audit-log' ) );
+			// Verify nonce for the GET request sent by Select2.
+			if ( ! isset( $_GET['nonce'] ) || false === \wp_verify_nonce( \sanitize_text_field( \wp_unslash( $_GET['nonce'] ) ), 'wsal-select2-check' ) ) {
+				\wp_send_json_error( \esc_html__( 'Insecure request.', 'wp-security-audit-log' ) );
 			}
 
 			if ( ! \is_user_logged_in() || ! \current_user_can( 'manage_options' ) ) {
@@ -377,7 +377,8 @@ if ( ! class_exists( '\AdminNoticesManager\Select2_WPWS' ) ) {
 						if ( isset( $object ) ) {
 							$data_item = self::convert_object_to_select2_data( $object );
 							if ( ! is_null( $data_item ) ) {
-								echo 's2.append(new Option("' . $data_item['text'] . '", ' . $data_item['id'] . ', true, true)).trigger("change");';
+								$option_text = \wp_json_encode( $data_item['text'], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT );
+								echo 's2.append(new Option(' . $option_text . ', ' . $data_item['id'] . ', true, true)).trigger("change");';
 							}
 						}
 					}
@@ -441,7 +442,8 @@ if ( ! class_exists( '\AdminNoticesManager\Select2_WPWS' ) ) {
 			$search_term = $wp_query->get( 'search_post_title' );
 			if ( $search_term ) {
 				global $wpdb;
-				$where .= ' AND ' . $wpdb->posts . '.post_title LIKE \'%' . $wpdb->esc_like( $search_term ) . '%\'';
+				$like = '%' . $wpdb->esc_like( $search_term ) . '%';
+				$where .= $wpdb->prepare( " AND {$wpdb->posts}.post_title LIKE %s", $like );
 			}
 
 			return $where;

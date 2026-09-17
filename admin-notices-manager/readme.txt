@@ -5,8 +5,8 @@ License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl.html
 Tags: admin notices, hide admin notices, manage admin notices, notices, dashboard notices
 Requires at least: 5.0
-Tested up to: 6.9
-Stable tag: 1.6.0
+Tested up to: 7.1
+Stable tag: 1.6.1
 Requires PHP: 7.2.0
 
 Better manage admin notices & never miss important developer messages!
@@ -96,100 +96,123 @@ Visit the [Melapress website](https://melapress.com/) for more information about
 
 == Changelog ==
 
+= 1.6.1 (2026-09-17) =
+
+* **Security patch**
+
+  * Administrator SQL Injection reported by Ananda Dhakal.
+
 = 1.6.0 (2025-02-24) =
 
-* **New Functionality**
-	* Added an option to allow specific notifications to appear in the dashboard as usual.
+* **New functionality**
 
-* **Enhancements & improvements**
-	* Improved plugin handling of translations, ensuring proper translation of strings within JavaScript code.
-	* Enhanced the way notifications are hidden, significantly reducing the "visual flash" effect when a notification disappears.
+  * Added an option to allow specific notifications to appear in the dashboard as usual.
 
-* **Bug Fixes**
-	* Fixed an issue where site notifications were not properly hidden on Simply History plugin pages.
-	* Resolved a conflict with the Admin Site Enhancements plugin that caused its main page to appear blank when Admin Notice Manager was active.
-	* Fixed a compatibility issue with Gravity Forms, where some Gravity Forms plugin pages appeared blank when our plugin was active.
-	* Addressed a visual issue where our plugin incorrectly hid the H5P plugin’s consent notice.
-	* Fixed a problem where some notices were missing the "Hide Forever" button.
-	* Resolved a bug causing the "Reset list of hidden notices" function to malfunction.
-	* Fixed a bug in which "Success level notices" were not being excluded from being hidden according to the plugin settings.
-	* Improved the way we count the hidden notifications. Plugin will now report correct number each time.
+* **Improvements**
+
+  * Improved the handling of translations, ensuring that strings within JavaScript code are translated correctly.
+  * Improved how notifications are hidden, significantly reducing the visual flash that could occur when a notification disappeared.
+
+* **Bug fixes**
+
+  * Fixed an issue where site notifications were not hidden correctly on Simple History plugin pages.
+  * Resolved a conflict with the Admin Site Enhancements plugin that could cause its main page to appear blank.
+  * Fixed a compatibility issue with Gravity Forms that could cause some Gravity Forms pages to appear blank.
+  * Fixed an issue where the plugin incorrectly hid the H5P plugin consent notice.
+  * Fixed an issue where some notices were missing the Hide Forever button.
+  * Fixed the Reset List of Hidden Notices functionality.
+  * Fixed an issue where success notices were not excluded from being hidden according to the plugin settings.
+  * Improved the counting of hidden notifications.
 
 = 1.5.0 (2024-06-05) =
 
 * **Improvements**
-	* Updated some URLs + links to point to the Melapress website.
-	* Updated the license file.
-	* Added more sanitization and improved code structure in general.
-	* Added "Settings" link in the plugin listing on the plugins' page.
-	
+
+  * Updated URLs and links to point to the Melapress website.
+  * Updated the license file.
+  * Added additional sanitization and improved the general code structure.
+  * Added a Settings link to the plugin listing on the Plugins page.
+
 * **Bug fixes**
-	* Fixed: WordPress system notifcations were captured as third party notifications, thus hidden even when they should have not been.
-	* Security fix for missing authorization which would allow authenticated subscribers to retrieve list of user email addresses.
+
+  * Fixed an issue where WordPress system notifications were captured as third-party notifications and hidden when they should have remained visible.
+  * Fixed a missing authorization vulnerability that could allow authenticated subscribers to retrieve a list of user email addresses.
 
 = 1.4.0 (2023-02-15) =
 
-* **New features & functionality**
-	* Hidden notices can now be purged from within the plugin settings.
-	
+* **New features and functionality**
+
+  * Hidden notices can now be purged from the plugin settings.
+
 * **Improvements**
-	* Various UI tweaks.
-	* Improved support for 3rd-party plugins.
-	
+
+  * Added various UI improvements.
+  * Improved support for third-party plugins.
+
 * **Bug fixes**
-	* Fixed: a conflict with the Loco Translate caused by use of 'notice' css classes.
+
+  * Fixed a conflict with Loco Translate caused by the use of `notice` CSS classes.
 
 = 1.3.0 (2022-03-08) =
 
 Release notes: [Admin Notices Manager 1.3: Better support for custom admin notices](https://www.wpwhitesecurity.com/anm-1-3-0/)
 
-* **New features & functionality**
-	* Capture and manage custom admin notices with a specific CSS Selector.
-	* Specify from which users to hide the admin notices.
-	
+* **New features and functionality**
+
+  * Added the ability to capture and manage custom admin notices using a specific CSS selector.
+  * Added the ability to specify which users should have admin notices hidden.
+
 * **Improvements**
-	* Improved PHP8 compatibility.
-	* Applied the WordPress Coding Standards to all plugin code.
-	* Tidied up the translation domain in the plugin's code.
-	* Improved the function that deletes the plugin data upon uninstall.
-	
+
+  * Improved PHP 8 compatibility.
+  * Applied the WordPress Coding Standards throughout the plugin.
+  * Standardized the translation domain used in the plugin.
+  * Improved the process that deletes plugin data during uninstall.
+
 * **Bug fixes**
-	* Fixed: a conflict with the WP Mail SMTP plugin breaks the plugin's settings pages.
-	* Fixed: fatal error reported in plugin when use on some specific themes.
+
+  * Fixed a conflict with WP Mail SMTP that could break the plugin settings pages.
+  * Fixed a fatal error that could occur with specific themes.
 
 = 1.2.0 (2021-08-10) =
 
-Release notes: [Admin Notices Manager 1.2: more information about admin notices & other improvements](https://www.wpwhitesecurity.com/anm-1-2-0/)
+Release notes: [Admin Notices Manager 1.2: More information about admin notices and other improvements](https://www.wpwhitesecurity.com/anm-1-2-0/)
 
 * **New features**
-	* Option to permanently hide specific admin notices.
-	* Plugin reports the date and time of when it detects an admin notice.
-	* Admin notices are categorized by admin notice level.
+
+  * Added the option to permanently hide specific admin notices.
+  * Added the date and time when an admin notice was detected.
+  * Added categorization by admin notice level.
 
 * **Improvements**
-	* Admin notices are now displayed in a sidebar instead of a popup window. 
-	* Plugin data in the database is completely removed upon uninstall.
-	* Improved admin notices readability.
-	* Removed duplicate code.
 
-* **Bug fix**
-	* Plugin settings needed to be saved before the plugin could capture admin notices.   
+  * Admin notices are now displayed in a sidebar instead of a pop-up window.
+  * Plugin data is completely removed from the database when the plugin is uninstalled.
+  * Improved admin notice readability.
+  * Removed duplicate code.
+
+* **Bug fixes**
+
+  * Fixed an issue where the plugin settings needed to be saved before the plugin could capture admin notices.
 
 = 1.1.0 (2021-01-11) =
 
-Release notes: [Admin Notices Manager 1.1: choose which admin notices you want to see & which not](https://www.wpwhitesecurity.com/anm-1-1-0/)
+Release notes: [Admin Notices Manager 1.1: Choose which admin notices you want to see](https://www.wpwhitesecurity.com/anm-1-1-0/)
 
 * **New features**
-	* New settings to configure which types of admin notices should the plugin ignore, capture and display in central list, or hide completely.
+
+  * Added settings to configure which types of admin notices should be ignored, captured and displayed in the central list, or hidden completely.
 
 * **Improvements**
-	* Plugin automatically detects and allows system messages to appear as per normal (for example; User profile updated). It is also possible to configure the plugin to capture these messages.  
+
+  * The plugin automatically detects and displays WordPress system messages, such as the User Profile Updated notice. The plugin can also be configured to capture these messages.
 
 * **Known issue**
-	* The tabs in the WooCommerce Membership plugin UI disappear due to a conflict. We have not yet found a solution for this.   
+
+  * Tabs in the WooCommerce Memberships interface may disappear because of a plugin conflict.
 
 = 1.0 =
 
-Release notes: [Admin Notices Manager: announcing the new plugin](https://www.wpwhitesecurity.com/admin-notices-manager-announcing-the-new-plugin/)
+Release notes: [Admin Notices Manager: Announcing the new plugin](https://www.wpwhitesecurity.com/admin-notices-manager-announcing-the-new-plugin/)
 
-* First release
+* First release.
