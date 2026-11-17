@@ -1,5 +1,7 @@
 "use strict";
 
+// Melapress plugin banners (e.g. Black Friday) that ANM must never move, hide or remove.
+var anmBannerSelector = ['.mre-extra-event-banner.black-friday', '.mfm-extra-event-banner.black-friday', '.mls-extra-event-banner.black-friday', '.wp-2fa-extra-event-banner.black-friday', '.anm-extra-event-banner.black-friday', '#wsal-bf-notice.wsal-bf-notice'].join(', ');
 jQuery(function () {
   var ignore_selector = '.hidden, .hide-if-js, .update-message, [aria-hidden="true"], .anm-display-notice';
 
@@ -7,7 +9,7 @@ jQuery(function () {
     ignore_selector += ', ' + anm_i18n.settings['css_selector'];
   }
 
-  jQuery('#wpbody-content .wrap').find('div.updated, div.error, div.notice, #message').not(ignore_selector).css({
+  jQuery('#wpbody-content .wrap').find('div.updated, div.error, div.notice, #message').not(ignore_selector).not(anmBannerSelector).css({
     'display': 'none'
   });
 });
@@ -123,7 +125,7 @@ jQuery(function () {
         var wrapper = $('.anm-notices-wrapper');
 
         if (wrapper.children(this.getIgnoreSelector()).length > 0) {
-          wrapper.children().not(this.getIgnoreSelector()).remove();
+          wrapper.children().not(this.getIgnoreSelector()).not(this.getBannerSelector()).remove();
           wrapper.show();
         }
       }
@@ -137,14 +139,30 @@ jQuery(function () {
 
       return ignore_selector;
     },
+    getBannerSelector: function getBannerSelector() {
+      // Kept out of getIgnoreSelector(), so a banner alone doesn't trigger the wrapper cleanup.
+      return anmBannerSelector;
+    },
     getIgnoreParentSelector: function getIgnoreParentSelector() {
       var ignore_selector = '#loco-content';
       return ignore_selector;
     },
+    markExcludedNotices: function markExcludedNotices() {
+      var selector = anm_i18n.settings['css_selector'];
+
+      if (!selector.length) {
+        return;
+      } // The stylesheet hides every notice without .leave-in-place, so excluded notices need it to stay visible.
+
+
+      $('#wpwrap').find('div.updated, div.error, div.notice, #message').filter(selector).addClass('leave-in-place');
+    },
     transferNotices: function transferNotices() {
       var _this4 = this;
 
-      var notices = $('#wpwrap ').find('div.updated, div.error, div.notice, #message').not(this.getIgnoreSelector()); //	filter out the system notices
+      this.markExcludedNotices();
+
+      var notices = $('#wpwrap ').find('div.updated, div.error, div.notice, #message').not(this.getIgnoreSelector()).not(this.getBannerSelector()); //	filter out the system notices
 
       notices.each(function (index, notice) {
         var smCount = _this4.system_messages.length;

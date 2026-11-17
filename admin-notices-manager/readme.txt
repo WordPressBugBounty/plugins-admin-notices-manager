@@ -4,10 +4,10 @@ Plugin URI: https://melapress.com/wordpress-admin-notices/
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl.html
 Tags: admin notices, hide admin notices, manage admin notices, notices, dashboard notices
-Requires at least: 5.0
+Requires at least: 5.3
 Tested up to: 7.1
-Stable tag: 1.6.1
-Requires PHP: 7.2.0
+Stable tag: 1.6.2
+Requires PHP: 7.4.0
 
 Better manage admin notices & never miss important developer messages!
 
@@ -96,6 +96,17 @@ Visit the [Melapress website](https://melapress.com/) for more information about
 
 == Changelog ==
 
+= 1.6.2 (2026-11-17) =
+
+* **Functionality & plugin improvements**
+
+  * Raised the minimum required PHP version from 7.2 to 7.4.
+  * Added a dismissible Black Friday banner, scheduled to appear from November 17th through December 1st.
+
+* **Bug fixes**
+
+  * Fixed an issue where notices excluded by CSS selector disappeared completely. These notices now appear normally in the WordPress dashboard.
+
 = 1.6.1 (2026-09-17) =
 
 * **Security patch**
@@ -178,7 +189,7 @@ Release notes: [Admin Notices Manager 1.3: Better support for custom admin notic
 
 Release notes: [Admin Notices Manager 1.2: More information about admin notices and other improvements](https://www.wpwhitesecurity.com/anm-1-2-0/)
 
-* **New features**
+* **New functionality**
 
   * Added the option to permanently hide specific admin notices.
   * Added the date and time when an admin notice was detected.
@@ -199,7 +210,7 @@ Release notes: [Admin Notices Manager 1.2: More information about admin notices 
 
 Release notes: [Admin Notices Manager 1.1: Choose which admin notices you want to see](https://www.wpwhitesecurity.com/anm-1-1-0/)
 
-* **New features**
+* **New functionality**
 
   * Added settings to configure which types of admin notices should be ignored, captured and displayed in the central list, or hidden completely.
 

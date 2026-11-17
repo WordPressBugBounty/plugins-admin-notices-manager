@@ -22,6 +22,15 @@ if ( ! class_exists( '\AdminNoticesManager\Settings' ) ) {
 	class Settings {
 
 		/**
+		 * Page slug of the plugin settings page, used to match the current screen for the Black Friday banner.
+		 *
+		 * @var string
+		 *
+		 * @since 1.6.2
+		 */
+		public const PLUGIN_PAGE_SLUG = 'admin_notices_settings';
+
+		/**
 		 * Name of the option storing the plugin settings.
 		 *
 		 * @var string
@@ -43,6 +52,9 @@ if ( ! class_exists( '\AdminNoticesManager\Settings' ) ) {
 		public static function init() {
 
 			\add_filter( 'plugin_action_links', array( __CLASS__, 'add_settings_link' ), 10, 2 );
+
+			\add_action( 'all_admin_notices', array( __CLASS__, 'extra_event_banner' ), 1000000 );
+			\add_action( 'wp_ajax_anm_dismiss_extra_event_banner', array( __CLASS__, 'dismiss_extra_event_banner' ) );
 
 			$options = self::get_settings();
 
@@ -83,6 +95,7 @@ if ( ! class_exists( '\AdminNoticesManager\Settings' ) ) {
 			$pages = array(
 				self::$option_name => array(
 					'menu_title'  => esc_html__( 'Admin notices settings', 'admin-notices-manager' ),
+					'menu_slug'   => self::PLUGIN_PAGE_SLUG,
 					'parent_slug' => 'options-general.php',
 					'page_title'  => esc_html__( 'Admin notices settings', 'admin-notices-manager' ),
 					'text'        => 'Use the settings in this page to configure how the plugin should handle different types of admin notices. Refer to the introduction to admin notices for a detailed explanation about the different types of admin notices available in WordPress.',
@@ -104,7 +117,7 @@ if ( ! class_exists( '\AdminNoticesManager\Settings' ) ) {
 								'exceptions'       => array(
 									'title' => esc_html__( 'CSS selector', 'admin-notices-manager' ),
 									'type'  => 'text',
-									'value' => array_key_exists( 'exceptions-css-selector', $options ) ? $options['exceptions-css-selector'] : '',
+									'value' => array_key_exists( 'css_selector', $options ) ? $options['css_selector'] : '',
 									'text'  => esc_html__( 'Plugin will ignore all notices matching this CSS selector. Use jQuery compatible CSS selector. You can specify multiple selectors and comma separate them.', 'admin-notices-manager' ),
 								),
 							),
@@ -355,7 +368,7 @@ if ( ! class_exists( '\AdminNoticesManager\Settings' ) ) {
 			if ( ADMIN_NOTICES_BASENAME === $file ) {
 				$settings_link = '<a href="' . \add_query_arg(
 					array(
-						'page' => 'admin_notices_settings',
+						'page' => self::PLUGIN_PAGE_SLUG,
 					),
 					\admin_url( 'options-general.php' )
 				) . '">' . __( 'Settings', 'admin-notices-manager' ) . '</a>';
@@ -395,6 +408,263 @@ if ( ! class_exists( '\AdminNoticesManager\Settings' ) ) {
 			}
 
 			return $result;
+		}
+
+		/**
+		 * Checks whether a screen is the plugin settings page.
+		 *
+		 * @param \WP_Screen|null $screen - The screen to check.
+		 *
+		 * @return bool $is_plugin_screen - True if the screen is the plugin settings page.
+		 *
+		 * @since 1.6.2
+		 */
+		public static function is_extra_event_banner_screen( $screen ): bool {
+			if ( ! $screen instanceof \WP_Screen ) {
+				return false;
+			}
+
+			// The plugin supports PHP 7.4, so str_ends_with() (PHP 8.0) is not used.
+			$suffix = '_page_' . self::PLUGIN_PAGE_SLUG;
+
+			return substr( (string) $screen->base, -strlen( $suffix ) ) === $suffix;
+		}
+
+		/**
+		 * Campaign phase of the Black Friday banner, in UTC.
+		 *
+		 * Each phase can be dismissed once. The reminder phase starts on 26 November
+		 * even if an administrator first returns later, and 1 December is included in full.
+		 *
+		 * @return string $phase - Phase start date, or an empty string outside the campaign.
+		 *
+		 * @since 1.6.2
+		 */
+		public static function get_extra_event_banner_phase(): string {
+			$today = \wp_date( 'Y-m-d', null, new \DateTimeZone( 'UTC' ) );
+
+			if ( $today < '2026-11-17' || $today >= '2026-12-02' ) {
+				return '';
+			}
+
+			if ( $today < '2026-11-26' ) {
+				return '2026-11-17';
+			}
+
+			return '2026-11-26';
+		}
+
+		/**
+		 * Shows the Black Friday banner on the plugin settings page.
+		 *
+		 * @return void
+		 *
+		 * @since 1.6.2
+		 */
+		public static function extra_event_banner() {
+			if ( ! \current_user_can( 'manage_options' ) || ! self::is_extra_event_banner_screen( \get_current_screen() ) ) {
+				return;
+			}
+
+			$phase = self::get_extra_event_banner_phase();
+
+			if ( '' === $phase || \get_option( 'anm_extra_event_banner_dismissed', false ) === $phase ) {
+				return;
+			}
+			?>
+			<div class="black-friday anm-extra-event-banner">
+				<img class="black-friday-svg" src="<?php echo \esc_url( ADMIN_NOTICES_MANAGER_URL . 'assets/img/upgrade-plugin-icon.svg' ); ?>" alt="" width="113" height="101">
+
+				<div class="black-friday-content">
+					<h2 class="black-friday-title"><?php \esc_html_e( 'Thank you for using our plugin!', 'admin-notices-manager' ); ?><br>
+						<span class="bf-title-line-2">
+						<?php
+						printf(
+							/* translators: %s: "up to 30% off this Black Friday", shown highlighted. */
+							\esc_html__( 'Explore our premium WordPress security plugins, now %s.', 'admin-notices-manager' ),
+							'<span class="bf-highlight">' . \esc_html__( 'up to 30% off this Black Friday', 'admin-notices-manager' ) . '</span>'
+						);
+						?>
+						</span>
+					</h2>
+					<a href="https://melapress.com/black-friday/?utm_source=plugin&utm_medium=anm&utm_campaign=BFCM2026" target="_blank" rel="noopener noreferrer" class="bf-cta-link"><?php \esc_html_e( 'View deals', 'admin-notices-manager' ); ?></a>
+					<p class="anm-extra-event-banner-error" role="alert" style="display:none;"><?php \esc_html_e( 'An error occurred. Please try again.', 'admin-notices-manager' ); ?></p>
+				</div>
+
+				<button type="button" aria-label="<?php \esc_attr_e( 'Close', 'admin-notices-manager' ); ?>" class="anm-extra-event-banner-close black-friday-close" data-dismiss-nonce="<?php echo \esc_attr( \wp_create_nonce( 'anm_dismiss_extra_event_banner' ) ); ?>"></button>
+			</div>
+
+			<script type="text/javascript">
+				jQuery( document ).ready( () => {
+					jQuery( 'body' ).on( 'click', '.anm-extra-event-banner-close', ( event ) => {
+						const button = jQuery( event.currentTarget );
+						const banner = button.closest( '.anm-extra-event-banner' );
+						const error  = banner.find( '.anm-extra-event-banner-error' );
+
+						error.hide();
+
+						jQuery.ajax( {
+							type: 'POST',
+							url: '<?php echo \esc_url( \admin_url( 'admin-ajax.php' ) ); ?>',
+							data: {
+								action: 'anm_dismiss_extra_event_banner',
+								nonce: button.attr( 'data-dismiss-nonce' ),
+							},
+							success: ( result ) => {
+								if ( result && result.success ) {
+									banner.slideUp( 300 );
+								} else {
+									error.show();
+								}
+							},
+							error: () => {
+								error.show();
+							},
+						} );
+					} );
+				} );
+			</script>
+			<style>
+				@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=Quicksand:wght@600;700&display=swap');
+
+				.anm-extra-event-banner.black-friday {
+					--color-coral: #FF8977;
+					--color-deep: #020E26;
+					box-sizing: border-box;
+					min-height: 126px;
+					margin: 20px 20px 0 2px;
+					padding: 12px 3rem 12px .6rem;
+					background-color: var(--color-deep);
+					background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 182 127"><path d="M181.413 -165.636L134.391 234.514L0 234.514L2.19345e-05 -165.636L181.413 -165.636Z" fill="%23B6C3F2"/></svg>');
+					background-repeat: no-repeat;
+					background-position: 0 0;
+					font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+					-webkit-font-smoothing: subpixel-antialiased;
+					color: #fff;
+					display: flex;
+					align-items: center;
+					gap: 1.5rem;
+					position: relative;
+					overflow: hidden;
+					border-left: 4px solid var(--color-coral);
+				}
+
+				.anm-extra-event-banner .black-friday-svg {
+					flex-shrink: 0;
+					width: 134px;
+					height: 101px;
+					margin-right: 32px;
+					z-index: 1;
+				}
+
+				.anm-extra-event-banner .black-friday-content {
+					z-index: 1;
+				}
+
+				.anm-extra-event-banner .black-friday-title {
+					margin: 0 0 4px;
+					font-family: Inter, sans-serif;
+					font-size: 1.9em;
+					font-weight: 900;
+					line-height: .9em;
+					letter-spacing: .5px;
+					text-transform: uppercase;
+					color: var(--color-coral);
+				}
+
+				.anm-extra-event-banner .bf-title-line-2 {
+					color: #fff;
+					font-size: .55em;
+					line-height: 1.4em;
+				}
+
+				.anm-extra-event-banner .bf-highlight {
+					color: var(--color-coral);
+				}
+
+				.anm-extra-event-banner .bf-cta-link {
+					display: inline-block;
+					margin: .25rem 0 0;
+					padding: .55rem 1.3rem;
+					border-radius: .25rem;
+					background: #D9E4FD;
+					color: #454BF7;
+					font-size: .875rem;
+					font-weight: bold;
+					text-decoration: none;
+					transition: all .2s ease-in-out;
+				}
+
+				.anm-extra-event-banner .bf-cta-link:hover,
+				.anm-extra-event-banner .bf-cta-link:focus {
+					background: #454BF7;
+					color: #D9E4FD;
+				}
+
+				.anm-extra-event-banner .anm-extra-event-banner-error {
+					margin: .5rem 0 0;
+				}
+
+				.anm-extra-event-banner .black-friday-close {
+					position: absolute;
+					top: 20px;
+					right: 20px;
+					width: 12px;
+					height: 12px;
+					padding: 0;
+					border: none;
+					background-color: transparent;
+					background-image: url('<?php echo \esc_url( ADMIN_NOTICES_MANAGER_URL . 'assets/img/close-icon-reverse.svg' ); ?>');
+					background-size: cover;
+					cursor: pointer;
+					z-index: 1;
+				}
+
+				@media (max-width: 1200px) {
+					.anm-extra-event-banner.black-friday {
+						flex-direction: column;
+						gap: 1rem;
+						padding: 1.66rem;
+						background-image: none;
+						text-align: center;
+					}
+
+					.anm-extra-event-banner .black-friday-svg {
+						width: 90px;
+						height: 80px;
+						margin: 0;
+					}
+				}
+			</style>
+			<?php
+		}
+
+		/**
+		 * Saves the current campaign phase as dismissed for this site.
+		 *
+		 * @return void
+		 *
+		 * @since 1.6.2
+		 */
+		public static function dismiss_extra_event_banner() {
+			$nonce = isset( $_POST['nonce'] ) ? \sanitize_text_field( \wp_unslash( $_POST['nonce'] ) ) : '';
+
+			if ( ! \current_user_can( 'manage_options' ) || empty( $nonce ) || ! \wp_verify_nonce( $nonce, 'anm_dismiss_extra_event_banner' ) ) {
+				\wp_send_json_error( \esc_html__( 'Nonce verification failed.', 'admin-notices-manager' ), 403 );
+			}
+
+			$phase = self::get_extra_event_banner_phase();
+
+			if ( '' !== $phase ) {
+				$option = 'anm_extra_event_banner_dismissed';
+
+				// update_option() also returns false when the value is already saved.
+				if ( ! \update_option( $option, $phase, false ) && \get_option( $option, false ) !== $phase ) {
+					\wp_send_json_error( \esc_html__( 'An error occurred. Please try again.', 'admin-notices-manager' ) );
+				}
+			}
+
+			\wp_send_json_success();
 		}
 	}
 }
